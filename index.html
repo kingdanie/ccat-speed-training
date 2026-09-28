@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCAT Speed Training — Crossover prep curriculum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F4F8; --surface:#FFFFFF; --ink:#14213D; --ink-soft:#4A5470; --line:#D9DEE8;
+    --blue:#1F4FD8; --blue-soft:#E6ECFB; --amber:#D98A16; --amber-soft:#FBF1DF;
+    --red:#C8392B; --red-soft:#FBE6E3; --green:#1E8E5A; --green-soft:#E1F4EA;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--blue)}
+  button{font:inherit;cursor:pointer}
+  h1,h2,h3{line-height:1.2;margin:0 0 .5rem}
+  h1{font-size:2rem;font-weight:700;letter-spacing:-.01em}
+  h2{font-size:1.45rem;font-weight:700}
+  h3{font-size:1.1rem;font-weight:600}
+  p{margin:0 0 1rem;max-width:68ch}
+  ul,ol{max-width:68ch;padding-left:1.3rem}
+  li{margin-bottom:.35rem}
+  .app{display:grid;grid-template-columns:270px 1fr;min-height:100vh}
+  nav{background:var(--surface);border-right:1px solid var(--line);padding:1.5rem 1rem;position:sticky;top:0;height:100vh;overflow:auto}
+  .brand{font-weight:700;font-size:1.05rem;padding:0 .5rem .25rem}
+  .brand small{display:block;font-weight:400;color:var(--ink-soft);font-size:.85rem}
+  .navgroup{margin-top:1.4rem}
+  .navgroup>span{display:block;padding:0 .5rem .4rem;color:var(--ink-soft);font-size:.85rem}
+  .navbtn{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;background:none;border:0;padding:.5rem .5rem;border-radius:8px;color:var(--ink);font-size:.95rem}
+  .navbtn:hover{background:var(--bg)}
+  .navbtn.active{background:var(--blue-soft);color:var(--blue);font-weight:600}
+  .navbtn .step{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;flex:none;color:var(--ink-soft)}
+  .navbtn.active .step{border-color:var(--blue);color:var(--blue)}
+  .navbtn.done .step{background:var(--green);border-color:var(--green);color:#fff}
+  main{padding:2.5rem 3rem 5rem;max-width:960px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+  .lead{font-size:1.1rem;color:var(--ink-soft);max-width:60ch}
+  .rule{border:0;border-top:1px solid var(--line);margin:1.5rem 0}
+  .row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+  .btn{background:var(--blue);color:#fff;border:0;padding:.65rem 1.1rem;border-radius:8px;font-weight:600}
+  .btn:hover{background:#183FB0}
+  .btn.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.ghost:hover{background:var(--blue-soft)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn:focus-visible,.navbtn:focus-visible,.opt:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .tag{display:inline-block;padding:.15rem .55rem;border-radius:999px;font-size:.8rem;background:var(--blue-soft);color:var(--blue);font-weight:600}
+  .tag.amber{background:var(--amber-soft);color:var(--amber)}
+  .tag.red{background:var(--red-soft);color:var(--red)}
+  .tag.green{background:var(--green-soft);color:var(--green)}
+  table{border-collapse:collapse;width:100%;font-size:.95rem}
+  th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--ink-soft)}
+  .ex{background:var(--bg);border-left:3px solid var(--blue);padding:.9rem 1.1rem;border-radius:0 8px 8px 0;margin:0 0 1rem}
+  .ex b{display:block;margin-bottom:.25rem}
+  .ex .steps{margin:.5rem 0 0;padding-left:1.2rem}
+  .ex .steps li{margin-bottom:.2rem}
+  /* drill */
+  .drillhead{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
+  .clock{display:flex;align-items:center;gap:.9rem}
+  .ring{width:76px;height:76px;position:relative;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums}
+  .clocklabel{color:var(--ink-soft);font-size:.9rem;max-width:22ch}
+  .clock.blue .val{color:var(--blue)} .clock.amber .val{color:var(--amber)} .clock.red .val{color:var(--red)}
+  .qtext{font-size:1.25rem;font-weight:500;margin:0 0 1.2rem;max-width:60ch}
+  .qtext svg{display:block;margin-top:.5rem}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem}
+  .opt{background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:.85rem 1rem;text-align:left;font-size:1.05rem;display:flex;align-items:center;gap:.7rem;min-height:56px}
+  .opt:hover{border-color:var(--blue);background:var(--blue-soft)}
+  .opt .k{width:24px;height:24px;border-radius:6px;background:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--ink-soft);flex:none}
+  .opt.correct{border-color:var(--green);background:var(--green-soft)}
+  .opt.wrong{border-color:var(--red);background:var(--red-soft)}
+  .opt:disabled{cursor:default}
+  .opt:disabled:hover{border-color:var(--line);background:var(--surface)}
+  .opt.correct:disabled:hover{border-color:var(--green);background:var(--green-soft)}
+  .opt.wrong:disabled:hover{border-color:var(--red);background:var(--red-soft)}
+  .feedback{margin-top:1.25rem;padding:1rem 1.2rem;border-radius:8px;border:1px solid var(--line)}
+  .feedback.ok{background:var(--green-soft);border-color:#B7E1CB}
+  .feedback.bad{background:var(--red-soft);border-color:#F1C2BC}
+  .feedback h3{margin-bottom:.4rem}
+  .feedback .fast{margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--line);color:var(--ink-soft)}
+  .progressbar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+  .progressbar div{height:100%;background:var(--blue);transition:width .25s}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin:1rem 0}
+  .stat{background:var(--bg);border-radius:8px;padding:.9rem 1rem}
+  .stat b{display:block;font-size:1.6rem;font-weight:700;line-height:1.1}
+  .stat span{color:var(--ink-soft);font-size:.9rem}
+  .simclock{font-size:2.2rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .simclock.amber{color:var(--amber)} .simclock.red{color:var(--red)}
+  .grid-cells{display:inline-grid;grid-template-columns:repeat(3,18px);gap:2px;vertical-align:middle}
+  .grid-cells i{width:18px;height:18px;background:var(--line);display:block;border-radius:2px}
+  .grid-cells i.on{background:var(--ink)}
+  .review{margin-top:1rem}
+  .review .item{padding:.7rem 0;border-bottom:1px solid var(--line);font-size:.95rem}
+  .review .item span{color:var(--ink-soft)}
+  .menu-toggle{display:none}
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr}
+    nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:1rem}
+    .navgroup{margin-top:.75rem}
+    .navlist{display:flex;gap:.25rem;overflow-x:auto;padding-bottom:.25rem}
+    .navbtn{white-space:nowrap;width:auto}
+    main{padding:1.5rem 1.1rem 4rem}
+    h1{font-size:1.6rem}
+    .qtext{font-size:1.1rem}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="brand">CCAT speed training<small>Crossover prep curriculum</small></div>
+    <div class="navgroup"><span>Stage 1</span>
+      <div class="navlist" id="nav-stage1"></div>
+    </div>
+    <div class="navgroup"><span>Stage 2 — technique modules</span>
+      <div class="navlist" id="nav-stage2"></div>
+    </div>
+    <div class="navgroup"><span>Stage 3</span>
+      <div class="navlist" id="nav-stage3"></div>
+    </div>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<script>
+/* ---------- helpers for spatial figures ---------- */
+const S = {
+  arrow(dir){ // dir: up right down left
+    const rot = {up:0,right:90,down:180,left:270}[dir];
+    return `<svg width="56" height="56" viewBox="0 0 56 56" aria-label="arrow ${dir}"><g transform="rotate(${rot} 28 28)"><path d="M28 8 L42 26 L33 26 L33 48 L23 48 L23 26 L14 26 Z" fill="#14213D"/></g></svg>`;
+  },
+  quadrant(pos){ // shaded quadrant of a square: tl tr br bl
+    const p={tl:[4,4],tr:[28,4],br:[28,28],bl:[4,28]}[pos];
+    return `<svg width="56" height="56" viewBox="0 0 56 56"><rect x="4" y="4" width="48" height="48" fill="none" stroke="#14213D" stroke-width="2"/><line x1="28" y1="4" x2="28" y2="52" stroke="#14213D" stroke-width="2"/><line x1="4" y1="28" x2="52" y2="28" stroke="#14213D" stroke-width="2"/><rect x="${p[0]}" y="${p[1]}" width="24" height="24" fill="#14213D"/></svg>`;
+  },
+  dots(n){
+    const pos={1:[[28,28]],2:[[18,28],[38,28]],3:[[28,16],[18,36],[38,36]],4:[[18,18],[38,18],[18,38],[38,38]],5:[[18,18],[38,18],[28,28],[18,38],[38,38]]}[n];
+    return `<svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#14213D" stroke-width="2"/>${pos.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#14213D"/>`).join('')}</svg>`;
+  },
+  poly(sides){
+    const r=22,cx=28,cy=30; let pts=[];
+    for(let i=0;i<sides;i++){const a=-Math.PI/2+i*2*Math.PI/sides;pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}
+    return `<svg width="56" height="56" viewBox="0 0 56 56"><polygon points="${pts.join(' ')}" fill="none" stroke="#14213D" stroke-width="2.5"/></svg>`;
+  },
+  cells(list){ // 3x3 grid, list of [x,y]
+    let out='';
+    for(let y=0;y<3;y++)for(let x=0;x<3;x++){const on=list.some(c=>c[0]===x&&c[1]===y);out+=`<i class="${on?'on':''}"></i>`;}
+    return `<span class="grid-cells" aria-label="grid figure">${out}</span>`;
+  },
+  shapeDots(shape,n){
+    const sh={sq:'<rect x="8" y="8" width="40" height="40" fill="none" stroke="#14213D" stroke-width="2"/>',tri:'<polygon points="28,6 50,48 6,48" fill="none" stroke="#14213D" stroke-width="2"/>',circ:'<circle cx="28" cy="28" r="22" fill="none" stroke="#14213D" stroke-width="2"/>'}[shape];
+    const pos={2:[[20,32],[36,32]],3:[[28,22],[20,36],[36,36]]}[n];
+    return `<svg width="56" height="56" viewBox="0 0 56 56">${sh}${pos.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#14213D"/>`).join('')}</svg>`;
+  },
+  seq(items){ return `<span style="display:inline-flex;gap:.6rem;align-items:center;flex-wrap:wrap">${items.join('<span style="color:#98A2B8">→</span>')}<span style="display:inline-flex;width:56px;height:56px;border:2px dashed #98A2B8;border-radius:6px;align-items:center;justify-content:center;color:#98A2B8;font-weight:700">?</span></span>`; },
+  set(items){ return `<span style="display:inline-flex;gap:1rem;align-items:center;flex-wrap:wrap">${items.map((s,i)=>`<span style="text-align:center;font-size:.85rem;color:#4A5470">${s}<br>${'ABCD'[i]}</span>`).join('')}</span>`; }
+};
+
+/* ---------- curriculum content ---------- */
+const MODULES = [
+{
+  id:'series', title:'Number series', short:'Series',
+  goal:'See the rule in under 8 seconds by testing patterns in a fixed order.',
+  lesson:`
+  <p class="lead">Number series are the cheapest points on the test. There are only about five rules the test uses, and if you check them in the same order every time, you stop thinking and start recognising.</p>
+  <h3>The four-step check</h3>
+  <ol>
+    <li><strong>Differences.</strong> Subtract neighbours. Constant difference? Done. (3, 7, 11 → +4)</li>
+    <li><strong>Differences of differences.</strong> If the gaps grow (1, 2, 3…) or shrink, it's a second-level pattern. (5, 6, 8, 11 → gaps 1, 2, 3)</li>
+    <li><strong>Ratios.</strong> Divide neighbours. Constant multiplier? (2, 6, 18 → ×3). Halving is common too.</li>
+    <li><strong>Alternation.</strong> If nothing fits, look at every second term, or at two operations taking turns (×2 then −5). Long, jumpy series are almost always this.</li>
+  </ol>
+  <p>Special cases to spot instantly: squares (1, 4, 9, 16), Fibonacci-style (each term is the sum of the previous two), and interleaved pairs (3, 9, 4, 16, 5, 25 is n followed by n²).</p>
+  <div class="ex"><b>Worked example: 100, 96, 88, 76, 60, ?</b>
+    <ol class="steps"><li>Differences: −4, −8, −12, −16. Not constant.</li><li>Differences of differences: each gap grows by 4. Next gap is −20.</li><li>60 − 20 = <strong>40</strong>. Total time: about 6 seconds.</li></ol></div>
+  <div class="ex"><b>Worked example: 10, 20, 15, 30, 25, 50, ?</b>
+    <ol class="steps"><li>Differences jump around (+10, −5, +15, −5, +25). That jumpiness is the tell.</li><li>Alternation: ×2, then −5, then ×2, then −5.</li><li>Last step was ×2, so next is −5: <strong>45</strong>.</li></ol></div>
+  <p><strong>Speed habit:</strong> write the differences directly under the series on your scratch paper. Don't do it in your head — the paper is faster than working memory.</p>`,
+  questions:[
+    {q:'3, 7, 11, 15, ?',o:['17','18','19','21'],a:2,e:'Constant difference of +4. 15 + 4 = 19.',f:'Step 1 (differences) solves it. Should take 4 seconds.'},
+    {q:'2, 6, 18, 54, ?',o:['108','162','216','72'],a:1,e:'Each term is ×3. 54 × 3 = 162.',f:'Differences (4, 12, 36) grow fast — that means jump straight to ratios.'},
+    {q:'1, 4, 9, 16, 25, ?',o:['30','32','36','49'],a:2,e:'Perfect squares: 1², 2², 3², 4², 5², so the next is 6² = 36.',f:'Memorise squares to 15². Seeing 1, 4, 9 should trigger "squares" instantly.'},
+    {q:'80, 40, 20, 10, ?',o:['0','2.5','5','8'],a:2,e:'Halving each time. 10 ÷ 2 = 5.',f:'Halving is a ratio pattern (×½). Recognise it from the first two terms.'},
+    {q:'5, 6, 8, 11, 15, ?',o:['18','19','20','21'],a:2,e:'Gaps are 1, 2, 3, 4, so the next gap is 5. 15 + 5 = 20.',f:'Growing gaps = second-level pattern. Write the gaps down.'},
+    {q:'1, 2, 4, 7, 11, 16, ?',o:['20','21','22','24'],a:2,e:'Gaps: 1, 2, 3, 4, 5. Next gap is 6. 16 + 6 = 22.',f:'Same rule as the previous item — the test reuses this constantly.'},
+    {q:'10, 20, 15, 30, 25, 50, ?',o:['40','45','60','100'],a:1,e:'Alternating ×2 and −5. After 50 comes −5: 45.',f:'Jumpy differences mean alternation. Test two operations taking turns.'},
+    {q:'3, 9, 4, 16, 5, 25, 6, ?',o:['30','32','36','49'],a:2,e:'Interleaved: n then n². 6² = 36.',f:'Read every second term as its own series: 3, 4, 5, 6 and 9, 16, 25, ?.'},
+    {q:'100, 96, 88, 76, 60, ?',o:['44','40','36','48'],a:1,e:'Gaps: −4, −8, −12, −16, so next is −20. 60 − 20 = 40.',f:'Gaps grow by a constant — second-level difference.'},
+    {q:'7, 14, 12, 24, 22, 44, ?',o:['42','46','88','40'],a:0,e:'Alternating ×2 and −2. After 44 comes −2: 42.',f:'When a series roughly doubles then dips, it is ×2 alternating with a subtraction.'},
+    {q:'1, 1, 2, 3, 5, 8, ?',o:['11','12','13','16'],a:2,e:'Each term is the sum of the previous two. 5 + 8 = 13.',f:'Fibonacci pattern — check "sum of previous two" whenever differences look like the series itself.'},
+    {q:'2, 3, 5, 8, 12, 17, ?',o:['21','22','23','24'],a:2,e:'Gaps: 1, 2, 3, 4, 5. Next gap 6. 17 + 6 = 23.',f:'By now this should be automatic.'}
+  ]
+},
+{
+  id:'math', title:'Math & word problems', short:'Math',
+  goal:'Estimate first, calculate second. Use the answer options as a tool.',
+  lesson:`
+  <p class="lead">Word problems eat the most time per question. The fix is not doing arithmetic faster — it's doing less of it. Set up the relationship, estimate the size of the answer, and let the options confirm it.</p>
+  <h3>Core shortcuts</h3>
+  <ul>
+    <li><strong>Percentages:</strong> build from 10% and 1%. 15% of 240 = 24 + 12 = 36. 35% = 3 × 10% + half of 10%.</li>
+    <li><strong>Reverse percentages:</strong> "costs $40 after a 20% discount" means 40 is 80% of the original. Divide by 0.8 (or: 40 ÷ 8 = 5, × 10 = 50).</li>
+    <li><strong>Percent change:</strong> (new − old) ÷ old. Always divide by the <em>starting</em> value.</li>
+    <li><strong>Rates:</strong> find the unit rate first (per hour, per pen, per worker), then scale.</li>
+    <li><strong>Inverse work problems:</strong> more workers, less time. Total work = workers × hours; keep that product constant.</li>
+    <li><strong>Ratios:</strong> add the parts to get the total number of "shares", then divide. 3:5 of 64 → 8 shares, 8 each → 24 and 40.</li>
+    <li><strong>Averages:</strong> sum ÷ count. For evenly spaced numbers, the average is the middle value (12, 18, 24, 30 → midpoint of 18 and 24 = 21).</li>
+    <li><strong>Simple equations:</strong> collect the x terms on one side, numbers on the other. Two lines on paper, no more.</li>
+  </ul>
+  <div class="ex"><b>Worked example: A shirt costs $40 after a 20% discount. What was the original price?</b>
+    <ol class="steps"><li>Trap: 40 + 20% of 40 = 48. Wrong — the discount was 20% of the original, not of $40.</li><li>40 is 80% of the original. 40 ÷ 0.8: think "40 ÷ 8 = 5, then × 10". <strong>$50</strong>.</li><li>Check: 20% of 50 is 10; 50 − 10 = 40. ✓</li></ol></div>
+  <div class="ex"><b>Worked example: 3 workers paint a wall in 6 hours. How long for 9 workers?</b>
+    <ol class="steps"><li>Total work = 3 × 6 = 18 worker-hours.</li><li>18 ÷ 9 = <strong>2 hours</strong>.</li><li>Sanity check: three times the workers, one third the time. ✓</li></ol></div>
+  <p><strong>Speed habit:</strong> read the last sentence of the problem first. It tells you what to compute, so you know which numbers matter as you read the rest.</p>`,
+  questions:[
+    {q:'What is 15% of 240?',o:['24','32','36','48'],a:2,e:'10% of 240 is 24; 5% is 12. 24 + 12 = 36.',f:'Build percentages from 10% and 5%. Never multiply 0.15 × 240 longhand.'},
+    {q:'A shirt costs $40 after a 20% discount. What was the original price?',o:['$48','$50','$52','$60'],a:1,e:'$40 is 80% of the original. 40 ÷ 0.8 = 50.',f:'"After a discount" means divide, not add. $48 is the trap.'},
+    {q:'A train travels 180 miles in 3 hours. At the same speed, how far does it travel in 5 hours?',o:['240','270','300','360'],a:2,e:'60 miles per hour × 5 hours = 300 miles.',f:'Unit rate first (180 ÷ 3 = 60), then scale.'},
+    {q:'3 workers paint a wall in 6 hours. How long would 9 workers take?',o:['18 hours','3 hours','2 hours','1.5 hours'],a:2,e:'Total work is 3 × 6 = 18 worker-hours. 18 ÷ 9 = 2 hours.',f:'Inverse relationship: triple the workers, one third the time.'},
+    {q:'What is the average of 12, 18, 24 and 30?',o:['20','21','22','24'],a:1,e:'Sum is 84; 84 ÷ 4 = 21. Or: evenly spaced, so the average is the midpoint of 18 and 24.',f:'Evenly spaced numbers — take the middle. No addition needed.'},
+    {q:'If x + 7 = 3x − 5, what is x?',o:['4','5','6','12'],a:2,e:'7 + 5 = 3x − x → 12 = 2x → x = 6.',f:'Move x terms left, numbers right, in one motion.'},
+    {q:'Two numbers are in the ratio 3:5 and add up to 64. What is the larger number?',o:['24','35','40','45'],a:2,e:'8 shares total, 64 ÷ 8 = 8 per share. Larger is 5 × 8 = 40.',f:'Add the ratio parts, divide, multiply. Three steps, no more.'},
+    {q:'Monthly sales rose from 250 to 300. What was the percent increase?',o:['16.7%','20%','25%','50%'],a:1,e:'Increase is 50. 50 ÷ 250 = 0.2 = 20%.',f:'Divide by the starting value. 16.7% (50 ÷ 300) is the trap.'},
+    {q:'A rectangle is 12 cm long and 5 cm wide. What is its perimeter?',o:['17 cm','34 cm','60 cm','24 cm'],a:1,e:'Perimeter = 2 × (12 + 5) = 34 cm.',f:'60 is the area — the distractor is always the "other" formula.'},
+    {q:'How much do 7 pens cost at $1.25 each?',o:['$7.75','$8.25','$8.75','$9.25'],a:2,e:'7 × 1 = 7, 7 × 0.25 = 1.75, total $8.75.',f:'Split the price into whole and fraction: $1 and a quarter.'},
+    {q:'What is half of a quarter of 800?',o:['50','100','200','400'],a:1,e:'A quarter of 800 is 200; half of that is 100.',f:'Read the phrase from the right: start with 800.'},
+    {q:'A meeting starts at 10:45 and lasts 95 minutes. When does it end?',o:['12:10','12:20','12:25','11:40'],a:1,e:'95 minutes = 1 hour 35 minutes. 10:45 + 1:00 = 11:45; + 35 min = 12:20.',f:'Add the hour first, then the minutes. Watch the crossover past :60.'},
+    {q:'A bag has 4 red and 6 blue marbles. What is the probability of drawing a red one?',o:['2/3','2/5','4/6','1/4'],a:1,e:'4 red out of 10 total = 4/10 = 2/5.',f:'Total first (10), then reduce the fraction.'},
+    {q:'If 5 apples cost $2, how many apples can you buy for $6?',o:['10','12','15','20'],a:2,e:'$6 is 3 × $2, so 3 × 5 = 15 apples.',f:'Scale the whole deal rather than finding the price per apple.'}
+  ]
+},
+{
+  id:'verbal', title:'Verbal reasoning', short:'Verbal',
+  goal:'Name the relationship before looking at the options.',
+  lesson:`
+  <p class="lead">Analogies, antonyms and odd-one-out items look like vocabulary tests, and partly they are. But the speed comes from a single habit: say the relationship in a sentence <em>before</em> you read the options.</p>
+  <h3>Analogies: the sentence method</h3>
+  <p>For "PAINTER is to CANVAS", say: "a painter works on a canvas." Then plug in the second pair: "a sculptor works on a ___." The word <em>marble</em> fits; <em>chisel</em> does not, because a chisel is the tool, not the surface. The common relationship types are: part to whole, tool to user, item to category, object to function, degree (warm : hot), and opposites.</p>
+  <h3>Antonyms</h3>
+  <p>First decide whether the word is positive, negative or neutral in tone, and whether it's about amount, attitude, speed, etc. The antonym flips the tone but keeps the topic. Frugal is "careful with money" → the opposite is "careless with money", so <em>extravagant</em>. Eliminate any option that is actually a synonym — the test always includes one.</p>
+  <h3>Odd one out</h3>
+  <p>Find the category three items share. Apple, banana, mango are fruits; carrot is a vegetable. Hammer, wrench, screwdriver are tools you hold; a nail is what they act on.</p>
+  <div class="ex"><b>Worked example: BIRD is to FLOCK as WOLF is to ?</b>
+    <ol class="steps"><li>Sentence: "a group of birds is a flock."</li><li>"A group of wolves is a ___." <strong>Pack.</strong></li><li>Don't look at the options until you have the sentence — they are designed to pull you toward "den" or "howl".</li></ol></div>
+  <h3>Vocabulary to know</h3>
+  <p>Learn these before test day; they recur: abate, ambiguous, benevolent, candid, concise, diligent, ephemeral, frugal, futile, gregarious, hostile, indifferent, lucid, meticulous, novice, obsolete, pragmatic, reluctant, scarce, tedious, verbose, volatile.</p>
+  <p><strong>Speed habit:</strong> if you don't know the key word at all, guess and move on within 5 seconds. You cannot reason your way to a word you've never seen.</p>`,
+  questions:[
+    {q:'BIRD is to FLOCK as WOLF is to ?',o:['den','pack','howl','forest'],a:1,e:'A group of birds is a flock; a group of wolves is a pack.',f:'Sentence first: "a group of ___ is a ___".'},
+    {q:'Which word is most nearly the opposite of FRUGAL?',o:['thrifty','extravagant','cautious','modest'],a:1,e:'Frugal means careful with money. Extravagant means spending freely. Thrifty is a synonym — the trap.',f:'Kill the synonym option first; it is always there.'},
+    {q:'PAINTER is to CANVAS as SCULPTOR is to ?',o:['chisel','marble','gallery','statue'],a:1,e:'A painter works on canvas (the material); a sculptor works on marble. Chisel is a tool, statue is the result.',f:'Decide: material, tool, or product? The sentence tells you which.'},
+    {q:'Which word is most nearly the opposite of CANDID?',o:['honest','evasive','cheerful','brief'],a:1,e:'Candid means frank and open. Evasive means avoiding directness.',f:'Honest is the synonym trap.'},
+    {q:'Which word does not belong: apple, banana, carrot, mango?',o:['apple','banana','carrot','mango'],a:2,e:'Three are fruits; carrot is a vegetable.',f:'Name the shared category in two words, then find the outsider.'},
+    {q:'AMPLIFY is to INCREASE as DIMINISH is to ?',o:['enlarge','reduce','repeat','measure'],a:1,e:'Amplify means to increase; diminish means to reduce. Synonym pair.',f:'When the first pair are synonyms, you are looking for a synonym.'},
+    {q:'Which word is closest in meaning to EPHEMERAL?',o:['permanent','fleeting','heavy','ancient'],a:1,e:'Ephemeral means lasting a very short time — fleeting.',f:'Permanent is the antonym trap.'},
+    {q:'Which word is most nearly the opposite of ABUNDANT?',o:['plentiful','scarce','generous','wide'],a:1,e:'Abundant means in large supply; scarce means in short supply.',f:'Plentiful is the synonym trap.'},
+    {q:'Which word does not belong: hammer, wrench, nail, screwdriver?',o:['hammer','wrench','nail','screwdriver'],a:2,e:'Hammer, wrench and screwdriver are tools; a nail is a fastener that tools act on.',f:'Category: hand tools. The nail is the object, not the tool.'},
+    {q:'HOT is to COLD as GENEROUS is to ?',o:['kind','stingy','wealthy','warm'],a:1,e:'Hot and cold are opposites; the opposite of generous is stingy.',f:'Sentence: "hot is the opposite of cold".'},
+    {q:'Which word is closest in meaning to PRAGMATIC?',o:['idealistic','practical','stubborn','talkative'],a:1,e:'Pragmatic means dealing with things in a realistic, practical way.',f:'Idealistic is the antonym trap.'},
+    {q:'LIBRARY is to BOOKS as ORCHARD is to ?',o:['farmer','trees','apples','soil'],a:1,e:'A library is a place that contains books; an orchard is a place that contains trees.',f:'Apples is tempting but an orchard contains trees, which produce apples.'}
+  ]
+},
+{
+  id:'logic', title:'Logic & deduction', short:'Logic',
+  goal:'Draw it. Never hold a syllogism or an ordering in your head.',
+  lesson:`
+  <p class="lead">Logic items are where confident people lose points, because intuition feels right and is wrong about a third of the time. Two tiny diagrams remove the guesswork.</p>
+  <h3>Syllogisms: two circles</h3>
+  <p>"All A are B" → draw circle A inside circle B. "Some A are B" → two overlapping circles. "No A are B" → two separate circles. Then read the conclusion off the picture. If you can draw the premises in a way that makes the conclusion false, the answer is "uncertain" (or "does not follow").</p>
+  <p>The classic trap: "All cats are mammals. Some mammals are pets. So some cats are pets." Draw cats inside mammals, then overlap pets with mammals <em>away from</em> cats. Conclusion isn't forced. <strong>Uncertain.</strong></p>
+  <h3>If–then: the one rule</h3>
+  <p>"If it rains, the match is cancelled." Knowing it rained tells you it was cancelled. Knowing it was <em>not</em> cancelled tells you it did <em>not</em> rain (the contrapositive). But knowing it <em>was</em> cancelled tells you nothing about rain — other things cancel matches. Memorise: <strong>deny the result → deny the cause; confirm the result → uncertain.</strong></p>
+  <h3>Ordering: a line of letters</h3>
+  <p>"Tom is taller than Sam; Sam is taller than Leo." Write T &gt; S &gt; L. For seating puzzles, draw slots ( _ _ _ _ ) and fill them. Each new clue either places someone or eliminates a slot.</p>
+  <div class="ex"><b>Worked example: A sits left of B. D sits between A and B. C sits right of B. Who is second from the left?</b>
+    <ol class="steps"><li>A … B (A left of B).</li><li>D goes between: A D B.</li><li>C right of B: A D B C.</li><li>Second from left: <strong>D</strong>.</li></ol></div>
+  <p><strong>Speed habit:</strong> the moment a question has "all", "some", "no", or "if", your pen should already be moving.</p>`,
+  questions:[
+    {q:'All engineers at Zed work remotely. Ada is an engineer at Zed. Which statement must be true?',o:['Ada works remotely','Ada works in an office','Ada is not an engineer','Cannot be determined'],a:0,e:'Ada is inside the "engineers at Zed" circle, which sits inside "works remotely".',f:'"All X are Y" + "this is an X" → it is a Y. Two seconds.'},
+    {q:'Some managers are engineers. All engineers write code. Does it follow that some managers write code?',o:['Yes','No','Only if all managers are engineers','Cannot be determined'],a:0,e:'The managers who are engineers must write code, since all engineers do. So at least some managers write code.',f:'"Some A are B, all B are C" → "some A are C". Always valid.'},
+    {q:'All cats are mammals. Some mammals are pets. Therefore some cats are pets. Is the conclusion valid?',o:['Yes','No, it is definitely false','It cannot be determined from the premises','Only if all mammals are pets'],a:2,e:'The pets could be mammals that are not cats. The premises allow the conclusion but do not force it.',f:'Draw pets overlapping mammals away from cats. If the picture is possible, it is uncertain.'},
+    {q:'If it rains, the match is cancelled. The match was not cancelled. What follows?',o:['It rained','It did not rain','The match was postponed','Cannot be determined'],a:1,e:'Denying the result denies the cause: no cancellation means no rain.',f:'Contrapositive — the one if–then inference that is always safe.'},
+    {q:'If it rains, the match is cancelled. The match was cancelled. Did it rain?',o:['Yes','No','Cannot be determined','Only if it rained heavily'],a:2,e:'Matches can be cancelled for other reasons. Confirming the result tells you nothing about the cause.',f:'Confirm the result → uncertain. This is the most common trap on the test.'},
+    {q:'Tom is taller than Sam. Sam is taller than Leo. Who is the shortest?',o:['Tom','Sam','Leo','Cannot be determined'],a:2,e:'T > S > L. Leo is shortest.',f:'Write the chain with > signs. Do not visualise it.'},
+    {q:'Four people sit in a row. A sits left of B. D sits between A and B. C sits right of B. Who is second from the left?',o:['A','B','C','D'],a:3,e:'Order is A, D, B, C. Second from left is D.',f:'Draw four slots and fill them clue by clue.'},
+    {q:'No reptiles are warm-blooded. All snakes are reptiles. Which must be true?',o:['Some snakes are warm-blooded','No snakes are warm-blooded','All warm-blooded animals are snakes','Cannot be determined'],a:1,e:'Snakes sit inside reptiles, which is entirely separate from warm-blooded. So no snakes are warm-blooded.',f:'"No B are C, all A are B" → "no A are C". Valid.'},
+    {q:'Ravi finished the race before Mia but after Kofi. Who finished first?',o:['Ravi','Mia','Kofi','Cannot be determined'],a:2,e:'Kofi > Ravi > Mia. Kofi was first.',f:'"Before X but after Y" → Y, then this person, then X.'},
+    {q:'"Every file in the folder is a PDF." Which single fact would prove this statement false?',o:['All the files are PDFs','One file is a JPG','The folder is empty','Most files are PDFs'],a:1,e:'One counterexample disproves "every". A single non-PDF file is enough.',f:'To break "all", you need exactly one exception.'},
+    {q:'Mira is older than Ben. Ben is older than Cy. Dana is younger than Cy. Who is second oldest?',o:['Mira','Ben','Cy','Dana'],a:1,e:'M > B > C > D. Second oldest is Ben.',f:'Chain the letters; each clue extends the chain.'},
+    {q:'All Zops are Quins. No Quins are Larks. Can a Zop be a Lark?',o:['Yes','No','Only some Zops','Cannot be determined'],a:1,e:'Zops are inside Quins; Quins and Larks do not overlap. So no Zop is a Lark.',f:'Nonsense words are deliberate — they stop you using real-world knowledge. Just draw the circles.'}
+  ]
+},
+{
+  id:'spatial', title:'Spatial reasoning', short:'Spatial',
+  goal:'Track one attribute at a time: rotation, shading, count, position.',
+  lesson:`
+  <p class="lead">Spatial items feel slow because people try to see the whole figure change at once. Instead, pick one attribute and ask what it does across the sequence. Most items change only one or two attributes per step.</p>
+  <h3>The attribute checklist</h3>
+  <ul>
+    <li><strong>Rotation:</strong> is something turning? By how much each step (45°, 90°)? Which direction?</li>
+    <li><strong>Shading:</strong> is a filled region moving around? Clockwise or anticlockwise?</li>
+    <li><strong>Count:</strong> are dots, sides or lines increasing by a fixed number?</li>
+    <li><strong>Position or size:</strong> is an element moving to a new corner, or growing?</li>
+    <li><strong>Reflection:</strong> a mirror image is <em>not</em> a rotation. If three figures are rotations of one shape and one is its mirror, the mirror is the odd one out.</li>
+  </ul>
+  <h3>Odd one out</h3>
+  <p>Count first. Counting dots, sides or lines is the fastest way to find the outsider, and the test uses it often. Only if counts match do you check rotation versus reflection.</p>
+  <div class="ex"><b>Worked example: an arrow points up, then right, then down. What comes next?</b>
+    <ol class="steps"><li>Attribute: rotation. Up → right is 90° clockwise. Right → down is another 90° clockwise.</li><li>Down → <strong>left</strong>.</li><li>Don't check anything else; one attribute explained every step.</li></ol></div>
+  <h3>Counting shapes in a figure</h3>
+  <p>For "how many triangles" items, count by size: smallest triangles first, then those made of two smaller ones, then larger. A square with both diagonals has 4 small triangles and 4 made of two halves each: 8.</p>
+  <p><strong>Speed habit:</strong> cover the options with your hand until you have predicted the answer. Spatial options are built to look plausible and will pull your eye.</p>`,
+  questions:[
+    {q:'Which figure comes next?<br>'+S.seq([S.arrow('up'),S.arrow('right'),S.arrow('down')]),o:[S.arrow('up'),S.arrow('left'),S.arrow('right'),S.arrow('down')],a:1,e:'The arrow rotates 90° clockwise each step: up, right, down, left.',f:'One attribute — rotation. Settle the direction from the first two figures.'},
+    {q:'Which figure comes next?<br>'+S.seq([S.quadrant('tl'),S.quadrant('tr'),S.quadrant('br')]),o:[S.quadrant('tl'),S.quadrant('tr'),S.quadrant('bl'),S.quadrant('br')],a:2,e:'The shaded square moves clockwise: top-left, top-right, bottom-right, then bottom-left.',f:'Shading moving around a fixed frame is always a clockwise or anticlockwise cycle.'},
+    {q:'Which figure comes next?<br>'+S.seq([S.dots(1),S.dots(2),S.dots(3)]),o:[S.dots(2),S.dots(5),S.dots(4),S.dots(3)],a:2,e:'One dot is added each step. Next is four dots.',f:'Count. Do not worry about where the dots sit.'},
+    {q:'Which figure does not belong?<br>'+S.set([S.shapeDots('sq',2),S.shapeDots('tri',2),S.shapeDots('circ',3),S.shapeDots('sq',2)]),o:['A','B','C','D'],a:2,e:'Three figures contain two dots; figure C contains three.',f:'Count before you compare shapes. The outer shape is a distraction.'},
+    {q:'Which figure comes next?<br>'+S.seq([S.poly(3),S.poly(4),S.poly(5)]),o:[S.poly(3),S.poly(6),S.poly(4),S.poly(8)],a:1,e:'The number of sides increases by one: triangle, square, pentagon, hexagon.',f:'Count sides. A hexagon has six.'},
+    {q:'Which figure does not belong?<br>'+S.set([S.cells([[2,0],[1,0],[0,0],[0,1]]),S.cells([[2,2],[2,1],[2,0],[1,0]]),S.cells([[0,0],[0,1],[0,2],[1,2]]),S.cells([[2,0],[2,1],[2,2],[1,2]])]),o:['A','B','C','D'],a:3,e:'A, B and C are rotations of the same L-shape. D is its mirror image, which cannot be produced by rotation.',f:'Same cell count in all four, so check rotation versus reflection. Trace the "foot" of the L.'},
+    {q:'How many triangles are in this figure?<br><svg width="90" height="90" viewBox="0 0 90 90"><rect x="5" y="5" width="80" height="80" fill="none" stroke="#14213D" stroke-width="2"/><line x1="5" y1="5" x2="85" y2="85" stroke="#14213D" stroke-width="2"/><line x1="85" y1="5" x2="5" y2="85" stroke="#14213D" stroke-width="2"/></svg>',o:['4','6','8','10'],a:2,e:'Four small triangles, plus four larger ones each made from two adjacent small triangles (one per side of the square). 4 + 4 = 8.',f:'Count by size: small ones first, then combinations.'},
+    {q:'Which figure comes next?<br>'+S.seq([S.arrow('left'),S.arrow('up'),S.arrow('right')]),o:[S.arrow('left'),S.arrow('up'),S.arrow('down'),S.arrow('right')],a:2,e:'Rotating 90° clockwise: left, up, right, down.',f:'Same rule as the first item with a different start. Recognise it, don\'t re-derive it.'}
+  ]
+},
+{
+  id:'detail', title:'Attention to detail', short:'Detail',
+  goal:'Compare in chunks, not character by character.',
+  lesson:`
+  <p class="lead">These items ask whether two strings of names, numbers or codes are identical. They are pure speed. The trick is chunking: compare three or four characters at a time, and look for the kinds of differences the test likes to plant.</p>
+  <h3>Where the differences hide</h3>
+  <ul>
+    <li><strong>Swapped neighbours:</strong> 448921 vs 448912. Check the last few digits especially.</li>
+    <li><strong>Case changes:</strong> b7Gk2 vs b7GK2. Uppercase and lowercase of the same letter.</li>
+    <li><strong>Similar letters:</strong> M vs N, O vs Q, l vs 1, 0 vs O.</li>
+    <li><strong>Moved punctuation or decimal:</strong> 0.0507 vs 0.0570.</li>
+  </ul>
+  <div class="ex"><b>Worked example: how many pairs are identical?<br>448921 / 448912 &nbsp;·&nbsp; TRB-90 / TRB-90 &nbsp;·&nbsp; Lopez, M / Lopez, N</b>
+    <ol class="steps"><li>Pair 1: chunk "448" ✓, "921" vs "912" ✗.</li><li>Pair 2: identical ✓.</li><li>Pair 3: last letter M vs N ✗.</li><li><strong>One</strong> identical pair. About 8 seconds.</li></ol></div>
+  <p><strong>Speed habit:</strong> read the pairs aloud in your head as chunks ("four-four-eight, nine-two-one"). Sound catches swaps that eyes slide past.</p>`,
+  questions:[
+    {q:'How many of these pairs are exactly the same?<br>448921 / 448912<br>TRB-90 / TRB-90<br>Lopez, M / Lopez, N',o:['0','1','2','3'],a:1,e:'Only TRB-90 / TRB-90 matches. The first pair swaps the last two digits; the third changes M to N.',f:'Chunk the digits in threes.'},
+    {q:'Which of these is spelled differently from the others?',o:['Okonkwo','Okonkwo','Okonwko','Okonkwo'],a:2,e:'The third option swaps "kw" to "wk".',f:'Compare the middle of each word — that is where swaps are planted.'},
+    {q:'How many of these pairs are exactly the same?<br>71.204 / 71.204<br>MQ8-ZZ / MQ8-ZZ<br>b7Gk2 / b7GK2',o:['0','1','2','3'],a:2,e:'The first two pairs match. The third differs in case: k versus K.',f:'Case differences are the sneakiest. Scan specifically for them.'},
+    {q:'Which number is different from the others?',o:['5837291','5837291','5832791','5837291'],a:2,e:'The third option swaps "72" to "27".',f:'Chunk: 583-729-1. The middle chunk gives it away.'},
+    {q:'How many of these pairs are exactly the same?<br>Adeyemi, F / Adeyemi, F<br>30-118-4 / 30-181-4<br>QWpxL / QWpxL',o:['0','1','2','3'],a:2,e:'First and third match. The middle pair swaps 118 and 181.',f:'Digit strings: check each hyphenated block as a unit.'},
+    {q:'How many of these pairs are exactly the same?<br>0.0507 / 0.0570<br>AAB-BAA / AAB-BAA<br>9Q9Q / 9Q9Q',o:['0','1','2','3'],a:2,e:'Second and third match. The first pair moves the 7 and the 0.',f:'Decimals: compare the last two digits first.'}
+  ]
+},
+{
+  id:'exam', title:'Exam-style mixed set', short:'Mixed',
+  goal:'Apply the techniques to real question wording, with nothing telling you which one to use.',
+  lesson:`
+  <p class="lead">Every module so far told you the category before you read the question. The real test does not. This set is closer to the real thing: mixed types, exam phrasing, and traps in the wording rather than in the arithmetic.</p>
+  <h3>Where the difficulty actually sits</h3>
+  <p>Look at these problems and you'll notice the arithmetic is easy — 16 × 7, 4 × 50.5, 9 ÷ 0.15. Almost nothing here needs more than two operations. The difficulty is in three other places:</p>
+  <ul>
+    <li><strong>Working out what is being asked.</strong> "How many more, expressed as a percentage" means a percent change, not a subtraction. "15% of what number" is a division, not a multiplication. Reading the question correctly is most of the work.</li>
+    <li><strong>Multi-hop wording.</strong> "10% younger than her sister, and three times older than her daughter" is two hops from a single given number. Write each hop on paper as you read; don't hold them.</li>
+    <li><strong>Reverse percentages.</strong> Several problems here give you the result and ask for the input. That is always a division, and it is the single most common place candidates lose points.</li>
+  </ul>
+  <h3>Three set-ups worth memorising</h3>
+  <ul>
+    <li><strong>"X is P% of what?"</strong> → answer = X ÷ P%. (6 is 15% of what → 6 ÷ 0.15 = 40.)</li>
+    <li><strong>"Total pay = base + commission"</strong> → subtract the base first, then divide by the rate. Never work with the total.</li>
+    <li><strong>Successive percentage changes</strong> → multiply in sequence, never add the percentages. +10% then +25% is ×1.1 then ×1.25, not +35%.</li>
+  </ul>
+  <div class="ex"><b>Worked example: a salesperson earns $3,200 base plus 5% commission. Total pay was $4,900. What were total sales?</b>
+    <ol class="steps"><li>Commission = 4900 − 3200 = 1700. (Subtract the base first — this is the step people skip.)</li><li>5% of sales = 1700, so sales = 1700 ÷ 0.05, which is 1700 × 20 = <strong>$34,000</strong>.</li><li>Dividing by 5% is multiplying by 20. Know that, and this is a 12-second question.</li></ol></div>
+  <h3>On the figure questions</h3>
+  <p>Sets like this usually carry five or six spatial items alongside the word problems — complete-the-pattern and odd-one-out. They are solved by the checklist in the spatial module, and the useful thing is that they reward <em>naming the varying attribute out loud</em> before looking at the options. Rotation, shading, count, position, reflection: one of those five explains almost every item. Drill those in the Spatial module; there is no separate method for them here.</p>
+  <p><strong>Speed habit:</strong> for the questions in this set, write the set-up on paper before computing anything. The set-up is where the points are; the arithmetic never is.</p>`,
+  questions:[
+    {q:'A factory produces 16 lawn mowers each hour. How many lawn mowers will it produce in seven hours?',o:['96','105','112','120'],a:2,e:'16 × 7 = 112.',f:'Split it: 16 × 7 = (10 × 7) + (6 × 7) = 70 + 42. Under five seconds.'},
+    {q:'Among the following values, which one is the largest?',o:['0.815','0.581','0.851','0.518'],a:2,e:'Compare digit by digit from the left. All start 0.5 or 0.8; among the 0.8s, 0.851 beats 0.815 at the second decimal.',f:'Never convert to fractions. Scan left to right and stop at the first digit that differs.'},
+    {q:'In January an appliance store sells 245 toasters. If it sells 200 more toasters in February than in January, how many does it sell in February?',o:['455','445','425','245'],a:1,e:'245 + 200 = 445.',f:'Deliberately trivial — the test opens with these. Bank the point in three seconds and move.'},
+    {q:'A store discounts all jackets by 40%. If the regular price is $75, how many jackets could a shopper buy for $495?',o:['11','12','13','14'],a:0,e:'40% off $75 leaves $45. 495 ÷ 45 = 11.',f:'Find the sale price first. 40% of 75 is 30, so the price is 45 — then it is one division.'},
+    {q:'6 is 15% of what number?',o:['20','25','30','40'],a:3,e:'6 ÷ 0.15 = 40. Check: 15% of 40 is 6. ✓',f:'"Is P% of what" means divide. If division feels slow, test the options: 15% of 40 is 6 — done.'},
+    {q:'What would be the next number in this series?<br>2 … 7 … 17 … 32 … 52 … ?',o:['71','73','75','77'],a:3,e:'Gaps are +5, +10, +15, +20, so the next gap is +25. 52 + 25 = 77.',f:'Write the gaps under the series. The growing-gap pattern is the most common series on the test.'},
+    {q:'A company projects that 15% of the people it interviews will be suitable. How many people must it interview to find 9 suitable candidates?',o:['45','48','60','72'],a:2,e:'15% of X = 9, so X = 9 ÷ 0.15 = 60.',f:'Same shape as "6 is 15% of what" dressed in a story. Recognise the shape, skip the story.'},
+    {q:'A part-time employee works 23.5 hours per week on average. His coworker works 27 hours per week. How many hours combined do they work over four weeks?',o:['94','121','174','202'],a:3,e:'23.5 + 27 = 50.5 per week. 50.5 × 4 = 202.',f:'Add first, then multiply. Multiplying each separately doubles the work.'},
+    {q:'In 1962 Mantle hit 30 home runs and Maris hit 33. Expressed as a percentage, how many more home runs did Maris hit?',o:['3%','91%','10%','17%'],a:2,e:'Difference is 3. 3 ÷ 30 = 0.1 = 10%. Divide by Mantle\'s total, the baseline being compared against.',f:'"How many more, as a percentage" is percent change. The 3% option is the trap for anyone who reads only the difference.'},
+    {q:'A group of four numbers has an average of 18. The first three are 12, 24 and 16. What is the fourth?',o:['16','18','20','22'],a:2,e:'Total must be 18 × 4 = 72. The first three sum to 52. 72 − 52 = 20.',f:'Average questions: convert to a total immediately. Average × count, then subtract.'},
+    {q:'An investor buys shares at $20 each. They appreciate 10% in the first year and 25% in the next. What is the price after two years?',o:['$25.50','$26.00','$26.50','$27.50'],a:3,e:'$20 × 1.1 = $22. $22 × 1.25 = $27.50 (a quarter of 22 is 5.50).',f:'Never add the percentages — 35% of 20 would give $27, which is option d and exactly the planted trap.'},
+    {q:'A salesperson earns $3,200 base salary plus 5% commission on sales. Total pay for the month was $4,900. What were the total sales?',o:['$30,000','$32,000','$34,000','$36,000'],a:2,e:'Commission = 4900 − 3200 = 1700. Sales = 1700 ÷ 0.05 = 1700 × 20 = $34,000.',f:'Subtract the base before dividing. Dividing by 5% is multiplying by 20 — memorise that.'},
+    {q:'A race starts with 12 runners from Team A and 12 from Team B. 3 from Team A and 6 from Team B do not finish. What percentage of the runners who finish are from Team A?',o:['50%','60%','63%','75%'],a:1,e:'Team A finishers: 9. Team B: 6. Total finishers: 15. 9 ÷ 15 = 60%.',f:'The question asks about finishers, not starters. 50% is the trap for anyone using the 24 who started.'},
+    {q:'Stephanie is three times as old as her daughter and 10% younger than her sister. If her sister is 40, how old is Stephanie\'s daughter?',o:['9','10','11','12'],a:3,e:'Stephanie is 10% less than 40, which is 36. Her daughter is 36 ÷ 3 = 12.',f:'Two hops from one number. Write "sister 40 → Steph 36 → daughter 12" on paper as you read; do not hold it in your head.'}
+  ]
+}
+];
+
+/* ---------- state ---------- */
+const state = { view:'intro', results:{}, sim:null };
+let timer = null;
+
+/* ---------- navigation ---------- */
+function buildNav(){
+  const s1 = document.getElementById('nav-stage1');
+  s1.innerHTML = navBtn('intro','How the test works',1) + navBtn('pacing','The pacing rule',2);
+  const s2 = document.getElementById('nav-stage2');
+  s2.innerHTML = MODULES.map((m,i)=>navBtn('mod:'+m.id, m.title, i+3, !!state.results[m.id])).join('');
+  const s3 = document.getElementById('nav-stage3');
+  s3.innerHTML = navBtn('sim','Full simulation: 50 in 15',MODULES.length+3) + navBtn('progress','Your progress',MODULES.length+4);
+}
+function navBtn(view,label,n,done){
+  const active = state.view===view || (view.startsWith('mod:') && state.view==='drill:'+view.slice(4));
+  return `<button class="navbtn ${active?'active':''} ${done?'done':''}" onclick="go('${view}')"><span class="step">${done?'✓':n}</span>${label}</button>`;
+}
+function go(view){
+  clearInterval(timer);
+  state.view = view;
+  buildNav();
+  const main = document.getElementById('main');
+  if(view==='intro') main.innerHTML = introView();
+  else if(view==='pacing') main.innerHTML = pacingView();
+  else if(view.startsWith('mod:')) main.innerHTML = moduleView(view.slice(4));
+  else if(view.startsWith('drill:')) startDrill(view.slice(6));
+  else if(view==='sim') main.innerHTML = simIntroView();
+  else if(view==='progress') main.innerHTML = progressView();
+  window.scrollTo(0,0);
+}
+
+/* ---------- static views ---------- */
+function introView(){
+  const total = MODULES.reduce((n,m)=>n+m.questions.length,0);
+  return `
+  <h1>Train for speed, not for knowledge</h1>
+  <p class="lead">The Crossover CCAT gives you 50 questions in 15 minutes: about 18 seconds each, no calculator. Almost nobody finishes. You pass by getting roughly 35–40 right, which means answering fast on the question types you've drilled and guessing quickly on the rest.</p>
+  <div class="card">
+    <h2>How this curriculum works</h2>
+    <p>Work through it in order. Each stage builds the habit the next one needs.</p>
+    <table>
+      <tr><th>Stage</th><th>What you do</th><th>What it builds</th></tr>
+      <tr><td>1</td><td>Read how the test works and learn the pacing rule</td><td>The triage instinct — when to commit and when to guess</td></tr>
+      <tr><td>2</td><td>Seven modules. Each one teaches a method, walks through examples, then drills you with a stopwatch on every question</td><td>Pattern recognition for each question type, and a feel for your own fast and slow categories</td></tr>
+      <tr><td>3</td><td>A full 50-question, 15-minute simulation mixing every category, with a breakdown by type and time</td><td>Endurance and pacing under the real constraint</td></tr>
+    </table>
+    <hr class="rule">
+    <p>There are ${total} original practice questions across the modules. Every drill shows you the answer, the reasoning, and a speed tip the moment you answer, and records your time so you can see where the seconds go.</p>
+    <p>Your results stay in this page while it is open. Refreshing clears them, so finish a drill before you leave.</p>
+    <div class="row"><button class="btn" onclick="go('pacing')">Start with the pacing rule</button></div>
+  </div>
+  <div class="card">
+    <h2>What the test contains</h2>
+    <table>
+      <tr><th>Category</th><th>Typical items</th><th>Share of test</th></tr>
+      <tr><td>Math & logic</td><td>Number series, word problems, percentages, ratios, simple algebra, syllogisms</td><td>Roughly 40%</td></tr>
+      <tr><td>Verbal</td><td>Analogies, antonyms, sentence completion, odd one out</td><td>Roughly 40%</td></tr>
+      <tr><td>Spatial</td><td>Next figure in a sequence, odd figure out, rotations and reflections</td><td>Roughly 20%</td></tr>
+    </table>
+    <p style="margin-top:1rem">Questions are mixed, not grouped, and get somewhat harder as you go. Attention-to-detail items (comparing codes and names) appear inside the verbal share.</p>
+  </div>
+  <div class="card">
+    <h2>Suggested schedule</h2>
+    <ul>
+      <li><strong>Days 1–3:</strong> one module per day, untimed reading then the drill. Reread the technique for any category under 70% accuracy.</li>
+      <li><strong>Days 4–12:</strong> one full simulation every day. After each one, redo the drill for your two weakest categories.</li>
+      <li><strong>Final three days:</strong> two simulations a day. Stop trying to learn new things; rehearse the triage rule until it's automatic.</li>
+    </ul>
+  </div>`;
+}
+function pacingView(){
+  return `
+  <h1>The pacing rule</h1>
+  <p class="lead">Every question is worth one point. A hard question you spend 60 seconds on costs you three easy ones you never reach. The pacing rule protects you from that trade.</p>
+  <div class="card">
+    <h2>The rule</h2>
+    <ol>
+      <li><strong>Five seconds to see a path.</strong> Read the question. If you know what method applies, commit.</li>
+      <li><strong>Up to 25 seconds to finish it.</strong> That is the budget for a question you have a path on. The clock in every drill turns amber at 18 seconds and red at 25.</li>
+      <li><strong>No path in five seconds? Guess and move.</strong> Pick the answer that looks most plausible and go. There is no penalty for wrong answers, so a blank is the only truly wrong answer.</li>
+      <li><strong>Never return.</strong> Real tests don't let you go back anyway. Train yourself not to want to.</li>
+    </ol>
+    <hr class="rule">
+    <h3>Why 25 and not 18?</h3>
+    <p>18 seconds is the average. You'll spend 5 seconds on some items and 25 on others, and the average works out if you guess quickly on the ones you skip. The danger is the 45-second question — it is never worth it.</p>
+    <h3>What to have ready</h3>
+    <ul>
+      <li>Two sheets of scratch paper and a pen. Write differences, draw circles, list orderings — paper is faster than working memory.</li>
+      <li>A quiet room, and nothing else open. The real test also verifies your score later under camera proctoring, so build genuine skill, not tricks.</li>
+      <li>A quick guessing default: for spatial items, the option that differs least from the last figure; for verbal, eliminate the obvious synonym or antonym first.</li>
+    </ul>
+    <div class="row"><button class="btn" onclick="go('mod:series')">Begin module 1: Number series</button></div>
+  </div>`;
+}
+function moduleView(id){
+  const m = MODULES.find(x=>x.id===id);
+  const idx = MODULES.indexOf(m);
+  const r = state.results[id];
+  return `
+  <span class="tag">Module ${idx+1} of ${MODULES.length}</span>
+  <h1 style="margin-top:.6rem">${m.title}</h1>
+  <p class="lead"><strong>Goal:</strong> ${m.goal}</p>
+  <div class="card">${m.lesson}</div>
+  <div class="card">
+    <h2>Timed drill</h2>
+    <p>${m.questions.length} questions. A stopwatch runs on each one; aim to answer before it turns amber at 18 seconds. You'll see the explanation after every answer.</p>
+    ${r?`<p>Your best so far: <strong>${r.correct}/${r.total}</strong> correct, average <strong>${r.avg.toFixed(1)}s</strong> per question.</p>`:''}
+    <div class="row"><button class="btn" onclick="go('drill:${id}')">${r?'Drill again':'Start the drill'}</button>
+    ${idx<MODULES.length-1?`<button class="btn ghost" onclick="go('mod:${MODULES[idx+1].id}')">Skip to next module</button>`:`<button class="btn ghost" onclick="go('sim')">Go to the full simulation</button>`}</div>
+  </div>`;
+}
+
+/* ---------- drill engine ---------- */
+let drill = null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function startDrill(id){
+  const m = MODULES.find(x=>x.id===id);
+  drill = { mod:m, qs:shuffle(m.questions), i:0, times:[], correct:0, log:[] };
+  renderDrillQ();
+}
+function ringSvg(frac,color){
+  const r=32,c=2*Math.PI*r;
+  return `<svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="${r}" fill="none" stroke="#E4E8F0" stroke-width="6"/><circle cx="38" cy="38" r="${r}" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(frac,1))}"/></svg>`;
+}
+function clockClass(sec){ return sec<18?'blue':sec<25?'amber':'red'; }
+function clockColor(sec){ return sec<18?'#1F4FD8':sec<25?'#D98A16':'#C8392B'; }
+function renderDrillQ(){
+  const d = drill, q = d.qs[d.i];
+  const main = document.getElementById('main');
+  main.innerHTML = `
+  <div class="drillhead">
+    <div><span class="tag">${d.mod.title}</span><h2 style="margin-top:.5rem">Question ${d.i+1} of ${d.qs.length}</h2></div>
+    <div class="clock blue" id="clock"><div class="ring" id="ring">${ringSvg(0,'#1F4FD8')}<div class="val" id="cval">0</div></div><div class="clocklabel">Target: under 18s. Amber past 18, red past 25.</div></div>
+  </div>
+  <div class="progressbar"><div style="width:${(d.i/d.qs.length)*100}%"></div></div>
+  <div class="card">
+    <p class="qtext">${q.q}</p>
+    <div class="opts" id="opts">${q.o.map((o,k)=>`<button class="opt" onclick="answer(${k})"><span class="k">${'ABCD'[k]}</span><span>${o}</span></button>`).join('')}</div>
+    <div id="fb"></div>
+  </div>`;
+  d.start = performance.now();
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    const sec = (performance.now()-d.start)/1000;
+    document.getElementById('cval').textContent = Math.floor(sec);
+    document.getElementById('ring').firstChild.outerHTML = ringSvg(sec/25, clockColor(sec));
+    document.getElementById('clock').className = 'clock '+clockClass(sec);
+  },200);
+}
+function answer(k){
+  clearInterval(timer);
+  const d = drill, q = d.qs[d.i];
+  const sec = (performance.now()-d.start)/1000;
+  d.times.push(sec);
+  const ok = k===q.a; if(ok) d.correct++;
+  d.log.push({q, k, ok, sec});
+  const btns = document.querySelectorAll('#opts .opt');
+  btns.forEach((b,i)=>{ b.disabled=true; if(i===q.a) b.classList.add('correct'); else if(i===k) b.classList.add('wrong'); });
+  const pace = sec<18?`<span class="tag">${sec.toFixed(1)}s — on pace</span>`:sec<25?`<span class="tag amber">${sec.toFixed(1)}s — over the 18s average</span>`:`<span class="tag red">${sec.toFixed(1)}s — this is where tests are lost. Guess and move next time.</span>`;
+  const last = d.i===d.qs.length-1;
+  document.getElementById('fb').innerHTML = `
+  <div class="feedback ${ok?'ok':'bad'}">
+    <h3>${ok?'Correct.':'Not this one. The answer is '+'ABCD'[q.a]+'.'} ${pace}</h3>
+    <p style="margin:0">${q.e}</p>
+    <div class="fast"><strong>Faster next time:</strong> ${q.f}</div>
+    <div class="row" style="margin-top:1rem"><button class="btn" id="nextbtn" onclick="${last?'finishDrill()':'nextQ()'}">${last?'See results':'Next question'}</button></div>
+  </div>`;
+  document.getElementById('nextbtn').focus();
+}
+function nextQ(){ drill.i++; renderDrillQ(); }
+function finishDrill(){
+  const d = drill;
+  const avg = d.times.reduce((a,b)=>a+b,0)/d.times.length;
+  const prev = state.results[d.mod.id];
+  if(!prev || d.correct>prev.correct || (d.correct===prev.correct && avg<prev.avg)) state.results[d.mod.id] = {correct:d.correct,total:d.qs.length,avg};
+  state.view = 'mod:'+d.mod.id; buildNav();
+  const over = d.times.filter(t=>t>=25).length;
+  const idx = MODULES.indexOf(d.mod);
+  const verdict = d.correct/d.qs.length>=0.8 && avg<18 ? 'This is a fast category for you. In the real test, commit to these.' : d.correct/d.qs.length>=0.8 ? 'Accurate but slow. Reread the technique and drill again — you know the method, you just need to stop deliberating.' : avg<18 ? 'Fast but leaky. Slow down by a few seconds on this type; you have the time budget for it.' : 'A slow category for now. Reread the lesson, drill it twice more, and if it stays slow, plan to guess on these in the real test.';
+  document.getElementById('main').innerHTML = `
+  <h1>${d.mod.title}: drill results</h1>
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><b>${d.correct}/${d.qs.length}</b><span>correct</span></div>
+      <div class="stat"><b>${avg.toFixed(1)}s</b><span>average per question</span></div>
+      <div class="stat"><b>${over}</b><span>questions over 25s</span></div>
+    </div>
+    <p><strong>Read:</strong> ${verdict}</p>
+    <div class="row"><button class="btn" onclick="go('drill:${d.mod.id}')">Drill again</button>
+    ${idx<MODULES.length-1?`<button class="btn ghost" onclick="go('mod:${MODULES[idx+1].id}')">Next module: ${MODULES[idx+1].title}</button>`:`<button class="btn ghost" onclick="go('sim')">Go to the full simulation</button>`}</div>
+  </div>
+  <div class="card"><h2>Question by question</h2><div class="review">${d.log.map((l,i)=>`<div class="item">${i+1}. ${l.ok?'✓':'✗'} <span>${l.sec.toFixed(1)}s</span> — ${l.q.q.replace(/<br>.*$/s,'').replace(/<[^>]+>/g,'')}${l.ok?'':' <span>(answer: '+'ABCD'[l.q.a]+')</span>'}</div>`).join('')}</div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ---------- full simulation ---------- */
+function simIntroView(){
+  return `
+  <h1>Full simulation: 50 questions, 15 minutes</h1>
+  <p class="lead">Questions from every category, shuffled, under a single countdown. When the clock hits zero the test ends and unanswered questions count as wrong, exactly as in the real thing.</p>
+  <div class="card">
+    <h2>Before you start</h2>
+    <ul>
+      <li>Scratch paper and a pen within reach. No calculator.</li>
+      <li>Apply the pacing rule: five seconds to find a path, guess and move if you don't.</li>
+      <li>Don't stop to read explanations — there aren't any until the end. Speed is the whole exercise.</li>
+    </ul>
+    <p>Passing territory for Crossover is usually about 35 correct or more. Your first attempt is a baseline; expect the number to climb by 5–10 over a fortnight of daily simulations.</p>
+    <div class="row"><button class="btn" onclick="startSim()">Start the 15-minute clock</button></div>
+  </div>`;
+}
+function startSim(){
+  const pool = shuffle(MODULES.flatMap(m=>m.questions.map(q=>({...q,cat:m.title})))).slice(0,50);
+  state.sim = { qs:pool, i:0, answers:[], start:performance.now(), qstart:performance.now(), limit:900 };
+  renderSimQ();
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    const left = state.sim.limit - (performance.now()-state.sim.start)/1000;
+    const el = document.getElementById('simclock'); if(!el) return;
+    if(left<=0){ finishSim(true); return; }
+    const mm=Math.floor(left/60), ss=Math.floor(left%60);
+    el.textContent = `${mm}:${ss<10?'0':''}${ss}`;
+    el.className = 'simclock '+(left<120?'red':left<300?'amber':'');
+  },250);
+}
+function renderSimQ(){
+  const s = state.sim, q = s.qs[s.i];
+  document.getElementById('main').innerHTML = `
+  <div class="drillhead">
+    <div><span class="tag">Simulation</span><h2 style="margin-top:.5rem">Question ${s.i+1} of ${s.qs.length}</h2></div>
+    <div class="simclock" id="simclock">15:00</div>
+  </div>
+  <div class="progressbar"><div style="width:${(s.i/s.qs.length)*100}%"></div></div>
+  <div class="card">
+    <p class="qtext">${q.q}</p>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" onclick="simAnswer(${k})"><span class="k">${'ABCD'[k]}</span><span>${o}</span></button>`).join('')}</div>
+    <div class="row" style="margin-top:1rem"><button class="btn ghost" onclick="simAnswer(-1)">Skip (counts as wrong)</button></div>
+  </div>`;
+  s.qstart = performance.now();
+}
+function simAnswer(k){
+  const s = state.sim;
+  s.answers.push({k, sec:(performance.now()-s.qstart)/1000});
+  s.i++;
+  if(s.i>=s.qs.length) finishSim(false); else renderSimQ();
+}
+function finishSim(timedOut){
+  clearInterval(timer);
+  const s = state.sim;
+  const used = Math.min((performance.now()-s.start)/1000, s.limit);
+  const rows = s.qs.map((q,i)=>({q, a:s.answers[i]||null}));
+  const correct = rows.filter(r=>r.a && r.a.k===r.q.a).length;
+  const cats = {};
+  rows.forEach(r=>{ const c=cats[r.q.cat]||(cats[r.q.cat]={n:0,ok:0,t:0,seen:0}); c.n++; if(r.a){c.seen++; c.t+=r.a.sec; if(r.a.k===r.q.a) c.ok++;} });
+  const reached = s.answers.length;
+  if(!state.results.sim || correct>state.results.sim.correct) state.results.sim = {correct, reached, used};
+  state.view='sim'; buildNav();
+  const verdict = correct>=40?'Comfortably in passing territory. Keep taking daily simulations to hold the level.':correct>=35?'On the passing line. Your next gain is speed on the slow categories below — each one you fix is worth several points.':correct>=28?'Close. Look at the category table: the categories with high time and low accuracy are the ones to guess on quickly in the real test, and the ones with low time and low accuracy need a technique reread.':'This is a baseline, not a verdict. Go back to the modules, drill your two weakest categories twice, and retake tomorrow.';
+  document.getElementById('main').innerHTML = `
+  <h1>Simulation results</h1>
+  ${timedOut?'<p class="lead">Time ran out. Unreached questions count as wrong.</p>':''}
+  <div class="card">
+    <div class="stats">
+      <div class="stat"><b>${correct}/50</b><span>correct</span></div>
+      <div class="stat"><b>${reached}</b><span>questions reached</span></div>
+      <div class="stat"><b>${reached?(used/reached).toFixed(1):'–'}s</b><span>average per question</span></div>
+      <div class="stat"><b>${Math.floor(used/60)}:${String(Math.floor(used%60)).padStart(2,'0')}</b><span>time used</span></div>
+    </div>
+    <p><strong>Read:</strong> ${verdict}</p>
+    <div class="row"><button class="btn" onclick="startSim()">Take another simulation</button><button class="btn ghost" onclick="go('progress')">See your progress</button></div>
+  </div>
+  <div class="card">
+    <h2>By category</h2>
+    <table><tr><th>Category</th><th>Correct</th><th>Avg time</th><th>Action</th></tr>
+    ${Object.entries(cats).map(([c,v])=>{const acc=v.seen?v.ok/v.seen:0, t=v.seen?v.t/v.seen:0; const act = !v.seen?'Not reached':acc>=.8&&t<18?'Fast category — commit to these':acc>=.8?'Accurate but slow — drill for speed':t<18?'Fast but inaccurate — reread technique':'Slow and inaccurate — drill twice, or guess quickly on test day'; return `<tr><td>${c}</td><td>${v.ok}/${v.n}</td><td>${v.seen?t.toFixed(1)+'s':'–'}</td><td>${act}</td></tr>`;}).join('')}
+    </table>
+  </div>
+  <div class="card"><h2>Review every question</h2><div class="review">${rows.map((r,i)=>{const ok=r.a&&r.a.k===r.q.a; return `<div class="item">${i+1}. ${ok?'✓':'✗'} <span>${r.q.cat}${r.a?' · '+r.a.sec.toFixed(1)+'s':' · not reached'}</span> — ${r.q.q.replace(/<br>.*$/s,'').replace(/<[^>]+>/g,'')}<br><span>${r.q.e}</span></div>`;}).join('')}</div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ---------- progress ---------- */
+function progressView(){
+  const rows = MODULES.map(m=>{const r=state.results[m.id]; return `<tr><td>${m.title}</td><td>${r?r.correct+'/'+r.total:'–'}</td><td>${r?r.avg.toFixed(1)+'s':'–'}</td><td>${r?(r.correct/r.total>=.8&&r.avg<18?'<span class="tag green">Fast</span>':r.correct/r.total>=.8?'<span class="tag amber">Slow</span>':'<span class="tag red">Needs work</span>'):'<span class="tag">Not drilled</span>'}</td></tr>`;}).join('');
+  const sim = state.results.sim;
+  return `
+  <h1>Your progress</h1>
+  <p class="lead">Best result in each module this session. A category counts as fast when you score 80% or better with an average under 18 seconds.</p>
+  <div class="card">
+    <table><tr><th>Module</th><th>Best score</th><th>Avg time</th><th>Status</th></tr>${rows}</table>
+  </div>
+  <div class="card">
+    <h2>Full simulation</h2>
+    ${sim?`<div class="stats"><div class="stat"><b>${sim.correct}/50</b><span>best score</span></div><div class="stat"><b>${sim.reached}</b><span>questions reached</span></div></div>`:'<p>No simulation taken yet.</p>'}
+    <div class="row"><button class="btn" onclick="go('sim')">${sim?'Take another':'Take the simulation'}</button></div>
+  </div>
+  <div class="card">
+    <h2>Next steps</h2>
+    <ul>
+      <li>Any module marked "Needs work": reread the technique, then drill twice.</li>
+      <li>Any module marked "Slow": drill once a day until it turns fast. You already know the method.</li>
+      <li>Once four or more modules are fast, switch to one simulation a day and use the category table to pick what to drill.</li>
+    </ul>
+  </div>`;
+}
+
+buildNav(); go('intro');
+</script>
+</body>
+</html>
