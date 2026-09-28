@@ -109,6 +109,31 @@
     .qtext{font-size:1.1rem}
   }
   @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+  /* ---- question bank ---- */
+  .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin:.75rem 0 1rem}
+  .chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .85rem;font-size:.9rem;color:var(--ink-soft)}
+  .chip:hover{border-color:var(--blue);color:var(--blue)}
+  .chip.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+  .chip .n{opacity:.7;font-size:.82rem;margin-left:.3rem}
+  .banklist .bq{border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;margin-bottom:.6rem;background:var(--surface)}
+  .banklist .bq .meta{font-size:.8rem;color:var(--ink-soft);margin-bottom:.35rem}
+  .banklist .bq .ans{color:var(--green);font-weight:600}
+  .banklist .bq .why{color:var(--ink-soft);font-size:.92rem;margin-top:.35rem}
+  .qtable{border-collapse:collapse;margin:.5rem 0;font-size:.95rem;width:auto}
+  .qtable th,.qtable td{border:1px solid var(--line);padding:.3rem .7rem;text-align:right}
+  .qtable th:first-child{text-align:left}
+  .figrow{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;margin:.6rem 0}
+  .figrow .arrowsep{color:#98A2B8;font-size:1.1rem}
+  .figbox{width:62px;height:62px;border:1.5px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--surface);flex:none}
+  .figbox.q{border-style:dashed;color:#98A2B8;font-weight:700;font-size:1.3rem}
+  .figmatrix{display:inline-grid;grid-template-columns:repeat(3,62px);gap:.4rem;margin:.6rem 0}
+  .figset{display:flex;gap:1rem;flex-wrap:wrap;margin:.6rem 0}
+  .figset .item{text-align:center}
+  .figset .item span{display:block;font-size:.85rem;color:var(--ink-soft);margin-top:.25rem}
+  .opt .figbox{width:54px;height:54px;margin:0 auto}
+  .opt.figopt{justify-content:center}
+  svg .ink{fill:none;stroke:var(--ink);stroke-width:2.5}
+  svg .inkfill{fill:var(--ink);stroke:none}
 </style>
 </head>
 <body>
@@ -128,6 +153,7 @@
   <main id="main"></main>
 </div>
 
+<script src="bank.js"></script>
 <script>
 /* ---------- helpers for spatial figures ---------- */
 const S = {
@@ -404,7 +430,9 @@ function buildNav(){
   const s2 = document.getElementById('nav-stage2');
   s2.innerHTML = MODULES.map((m,i)=>navBtn('mod:'+m.id, m.title, i+3, !!state.results[m.id])).join('');
   const s3 = document.getElementById('nav-stage3');
-  s3.innerHTML = navBtn('sim','Full simulation: 50 in 15',MODULES.length+3) + navBtn('progress','Your progress',MODULES.length+4);
+  s3.innerHTML = navBtn('bank','Question bank',MODULES.length+3)
+    + navBtn('sim','Full simulation: 50 in 15',MODULES.length+4)
+    + navBtn('progress','Your progress',MODULES.length+5);
 }
 function navBtn(view,label,n,done){
   const active = state.view===view || (view.startsWith('mod:') && state.view==='drill:'+view.slice(4));
@@ -420,6 +448,7 @@ function go(view){
   else if(view.startsWith('mod:')) main.innerHTML = moduleView(view.slice(4));
   else if(view.startsWith('drill:')) startDrill(view.slice(6));
   else if(view==='sim') main.innerHTML = simIntroView();
+  else if(view==='bank') main.innerHTML = bankView();
   else if(view==='progress') main.innerHTML = progressView();
   window.scrollTo(0,0);
 }
@@ -437,10 +466,10 @@ function introView(){
       <tr><th>Stage</th><th>What you do</th><th>What it builds</th></tr>
       <tr><td>1</td><td>Read how the test works and learn the pacing rule</td><td>The triage instinct — when to commit and when to guess</td></tr>
       <tr><td>2</td><td>Seven modules. Each one teaches a method, walks through examples, then drills you with a stopwatch on every question</td><td>Pattern recognition for each question type, and a feel for your own fast and slow categories</td></tr>
-      <tr><td>3</td><td>A full 50-question, 15-minute simulation mixing every category, with a breakdown by type and time</td><td>Endurance and pacing under the real constraint</td></tr>
+      <tr><td>3</td><td>A bank of 700+ questions you can filter and drill by type, plus a full 50-question, 15-minute simulation drawn from it</td><td>Endurance and pacing under the real constraint, with enough volume that you cannot memorise your way through</td></tr>
     </table>
     <hr class="rule">
-    <p>There are ${total} original practice questions across the modules. Every drill shows you the answer, the reasoning, and a speed tip the moment you answer, and records your time so you can see where the seconds go.</p>
+    <p>${total} taught questions across the modules, plus a bank of ${BANKMETA.total} more covering all fourteen CCAT question types — ${(BANKMETA.counts&&BANKMETA.counts.math)||0} math and logic, ${(BANKMETA.counts&&BANKMETA.counts.verbal)||0} verbal, ${(BANKMETA.counts&&BANKMETA.counts.spatial)||0} spatial, matching the test's own roughly equal thirds. Every drill shows you the answer, the reasoning, and a speed tip the moment you answer, and records your time so you can see where the seconds go.</p>
     <p>Your results stay in this page while it is open. Refreshing clears them, so finish a drill before you leave.</p>
     <div class="row"><button class="btn" onclick="go('pacing')">Start with the pacing rule</button></div>
   </div>
@@ -530,7 +559,8 @@ function renderDrillQ(){
   <div class="progressbar"><div style="width:${(d.i/d.qs.length)*100}%"></div></div>
   <div class="card">
     <p class="qtext">${q.q}</p>
-    <div class="opts" id="opts">${q.o.map((o,k)=>`<button class="opt" onclick="answer(${k})"><span class="k">${'ABCD'[k]}</span><span>${o}</span></button>`).join('')}</div>
+    ${typeof figStem === 'function' ? figStem(q.fig) : ''}
+    <div class="opts" id="opts">${q.o.map((o,k)=>`<button class="opt ${isFigOpt(q,o)?'figopt':''}" onclick="answer(${k})"><span class="k">${'ABCD'[k]}</span><span>${renderOpt(q,o)}</span></button>`).join('')}</div>
     <div id="fb"></div>
   </div>`;
   d.start = performance.now();
@@ -566,9 +596,15 @@ function nextQ(){ drill.i++; renderDrillQ(); }
 function finishDrill(){
   const d = drill;
   const avg = d.times.reduce((a,b)=>a+b,0)/d.times.length;
-  const prev = state.results[d.mod.id];
-  if(!prev || d.correct>prev.correct || (d.correct===prev.correct && avg<prev.avg)) state.results[d.mod.id] = {correct:d.correct,total:d.qs.length,avg};
-  state.view = 'mod:'+d.mod.id; buildNav();
+  const fromBank = !!d.fromBank;
+  if(!fromBank){
+    const prev = state.results[d.mod.id];
+    if(!prev || d.correct>prev.correct || (d.correct===prev.correct && avg<prev.avg)) state.results[d.mod.id] = {correct:d.correct,total:d.qs.length,avg};
+    state.view = 'mod:'+d.mod.id;
+  } else {
+    state.view = 'bank';
+  }
+  buildNav();
   const over = d.times.filter(t=>t>=25).length;
   const idx = MODULES.indexOf(d.mod);
   const verdict = d.correct/d.qs.length>=0.8 && avg<18 ? 'This is a fast category for you. In the real test, commit to these.' : d.correct/d.qs.length>=0.8 ? 'Accurate but slow. Reread the technique and drill again — you know the method, you just need to stop deliberating.' : avg<18 ? 'Fast but leaky. Slow down by a few seconds on this type; you have the time budget for it.' : 'A slow category for now. Reread the lesson, drill it twice more, and if it stays slow, plan to guess on these in the real test.';
@@ -581,8 +617,10 @@ function finishDrill(){
       <div class="stat"><b>${over}</b><span>questions over 25s</span></div>
     </div>
     <p><strong>Read:</strong> ${verdict}</p>
-    <div class="row"><button class="btn" onclick="go('drill:${d.mod.id}')">Drill again</button>
-    ${idx<MODULES.length-1?`<button class="btn ghost" onclick="go('mod:${MODULES[idx+1].id}')">Next module: ${MODULES[idx+1].title}</button>`:`<button class="btn ghost" onclick="go('sim')">Go to the full simulation</button>`}</div>
+    ${fromBank
+      ? `<div class="row"><button class="btn" onclick="startBankDrill(${d.qs.length})">Drill this set again</button><button class="btn ghost" onclick="go('bank')">Back to the bank</button></div>`
+      : `<div class="row"><button class="btn" onclick="go('drill:${d.mod.id}')">Drill again</button>
+    ${idx<MODULES.length-1?`<button class="btn ghost" onclick="go('mod:${MODULES[idx+1].id}')">Next module: ${MODULES[idx+1].title}</button>`:`<button class="btn ghost" onclick="go('sim')">Go to the full simulation</button>`}</div>`}
   </div>
   <div class="card"><h2>Question by question</h2><div class="review">${d.log.map((l,i)=>`<div class="item">${i+1}. ${l.ok?'✓':'✗'} <span>${l.sec.toFixed(1)}s</span> — ${l.q.q.replace(/<br>.*$/s,'').replace(/<[^>]+>/g,'')}${l.ok?'':' <span>(answer: '+'ABCD'[l.q.a]+')</span>'}</div>`).join('')}</div></div>`;
   window.scrollTo(0,0);
@@ -605,7 +643,7 @@ function simIntroView(){
   </div>`;
 }
 function startSim(){
-  const pool = shuffle(MODULES.flatMap(m=>m.questions.map(q=>({...q,cat:m.title})))).slice(0,50);
+  const pool = simPool();
   state.sim = { qs:pool, i:0, answers:[], start:performance.now(), qstart:performance.now(), limit:900 };
   renderSimQ();
   clearInterval(timer);
@@ -628,7 +666,8 @@ function renderSimQ(){
   <div class="progressbar"><div style="width:${(s.i/s.qs.length)*100}%"></div></div>
   <div class="card">
     <p class="qtext">${q.q}</p>
-    <div class="opts">${q.o.map((o,k)=>`<button class="opt" onclick="simAnswer(${k})"><span class="k">${'ABCD'[k]}</span><span>${o}</span></button>`).join('')}</div>
+    ${figStem(q.fig)}
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt ${isFigOpt(q,o)?'figopt':''}" onclick="simAnswer(${k})"><span class="k">${'ABCD'[k]}</span><span>${renderOpt(q,o)}</span></button>`).join('')}</div>
     <div class="row" style="margin-top:1rem"><button class="btn ghost" onclick="simAnswer(-1)">Skip (counts as wrong)</button></div>
   </div>`;
   s.qstart = performance.now();
@@ -646,7 +685,8 @@ function finishSim(timedOut){
   const rows = s.qs.map((q,i)=>({q, a:s.answers[i]||null}));
   const correct = rows.filter(r=>r.a && r.a.k===r.q.a).length;
   const cats = {};
-  rows.forEach(r=>{ const c=cats[r.q.cat]||(cats[r.q.cat]={n:0,ok:0,t:0,seen:0}); c.n++; if(r.a){c.seen++; c.t+=r.a.sec; if(r.a.k===r.q.a) c.ok++;} });
+  // Break results down by question TYPE — that is what tells you what to drill.
+  rows.forEach(r=>{ const key = TYPELABEL[r.q.type] || r.q.cat; const c=cats[key]||(cats[key]={n:0,ok:0,t:0,seen:0}); c.n++; if(r.a){c.seen++; c.t+=r.a.sec; if(r.a.k===r.q.a) c.ok++;} });
   const reached = s.answers.length;
   if(!state.results.sim || correct>state.results.sim.correct) state.results.sim = {correct, reached, used};
   state.view='sim'; buildNav();
@@ -697,6 +737,179 @@ function progressView(){
       <li>Once four or more modules are fast, switch to one simulation a day and use the category table to pick what to drill.</li>
     </ul>
   </div>`;
+}
+
+/* =========================================================
+   QUESTION BANK — 700+ generated items (bank.js)
+   ========================================================= */
+const BANK = (window.CCAT_BANK && window.CCAT_BANK.questions) || [];
+const BANKMETA = window.CCAT_BANK || { total:0, generated:'—' };
+
+const TYPELABEL = {
+  series:'Number series', arithmetic:'Basic arithmetic', word:'Word problems', table:'Tables & graphs',
+  analogy:'Analogies', antonym:'Antonyms', synonym:'Synonyms', sentence:'Sentence completion',
+  detail:'Attention to detail', syllogism:'Syllogisms', ordering:'Ordering',
+  shapeseries:'Shape series', matrix:'Matrix patterns', oddone:'Odd one out'
+};
+const CATLABEL = { math:'Math & logic', verbal:'Verbal', spatial:'Spatial' };
+
+/* ---------- figure rendering ----------
+   Questions store a compact spec; the SVG is built here so the file stays
+   small and the shapes stay crisp at any size. */
+const SV = (inner, extra) => `<svg viewBox="0 0 56 56" width="100%" height="100%" ${extra||''}>${inner}</svg>`;
+
+function fig(spec){
+  const s = typeof spec === 'string' ? JSON.parse(spec) : spec;
+  switch(s.k){
+    case 'arrow': {
+      const rot = {up:0,right:90,down:180,left:270}[s.d];
+      return SV(`<g transform="rotate(${rot} 28 28)"><path class="inkfill" d="M28 9 L41 26 L33 26 L33 47 L23 47 L23 26 L15 26 Z"/></g>`);
+    }
+    case 'quad': {
+      const p = {tl:[6,6],tr:[28,6],br:[28,28],bl:[6,28]}[s.p];
+      return SV(`<rect class="ink" x="6" y="6" width="44" height="44"/><line class="ink" x1="28" y1="6" x2="28" y2="50"/><line class="ink" x1="6" y1="28" x2="50" y2="28"/><rect class="inkfill" x="${p[0]}" y="${p[1]}" width="22" height="22"/>`);
+    }
+    case 'dots': {
+      const P = {1:[[28,28]],2:[[18,28],[38,28]],3:[[28,17],[18,37],[38,37]],
+                 4:[[18,18],[38,18],[18,38],[38,38]],5:[[18,18],[38,18],[28,28],[18,38],[38,38]],
+                 6:[[18,16],[38,16],[18,28],[38,28],[18,40],[38,40]]}[s.n] || [];
+      return SV(`<circle class="ink" cx="28" cy="28" r="23"/>` + P.map(p=>`<circle class="inkfill" cx="${p[0]}" cy="${p[1]}" r="3.6"/>`).join(''));
+    }
+    case 'poly': {
+      const r=21, cx=28, cy=28, pts=[];
+      for(let i=0;i<s.n;i++){ const a=-Math.PI/2 + i*2*Math.PI/s.n; pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)); }
+      const rot = s.rot ? ` transform="rotate(${s.rot} 28 28)"` : '';
+      const cls = s.fill ? 'inkfill' : 'ink';
+      return SV(`<polygon class="${cls}" points="${pts.join(' ')}"${rot}/>`);
+    }
+    case 'grid': {
+      let out='';
+      for(let i=0;i<9;i++){
+        const x=4+(i%3)*16, y=4+Math.floor(i/3)*16;
+        out += `<rect class="${s.on.includes(i)?'inkfill':'ink'}" x="${x}" y="${y}" width="15" height="15" ${s.on.includes(i)?'':'stroke-width="1.5"'}/>`;
+      }
+      return SV(out);
+    }
+    case 'flag': {
+      const a = s.r*45 * Math.PI/180;
+      const x = 28 + 20*Math.sin(a), y = 28 - 20*Math.cos(a);
+      return SV(`<circle class="ink" cx="28" cy="28" r="21"/><line class="ink" x1="28" y1="28" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/><circle class="inkfill" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5"/>`);
+    }
+    case 'shapedots': {
+      const shape = {
+        sq:'<rect class="ink" x="8" y="8" width="40" height="40"/>',
+        tri:'<polygon class="ink" points="28,6 50,48 6,48"/>',
+        circ:'<circle class="ink" cx="28" cy="28" r="22"/>',
+        pent:'<polygon class="ink" points="28,6 50,22 42,48 14,48 6,22"/>'
+      }[s.s];
+      const P = {1:[[28,32]],2:[[20,32],[36,32]],3:[[28,24],[20,38],[36,38]],
+                 4:[[20,24],[36,24],[20,38],[36,38]],5:[[20,24],[36,24],[28,31],[20,39],[36,39]]}[s.n] || [];
+      return SV(shape + P.map(p=>`<circle class="inkfill" cx="${p[0]}" cy="${p[1]}" r="3.2"/>`).join(''));
+    }
+    case 'ell': {
+      let cells = [[0,0],[0,1],[0,2],[1,2]];
+      if(s.flip) cells = cells.map(([x,y])=>[2-x,y]);
+      const turns = ((s.rot||0)/90)|0;
+      for(let t=0;t<turns;t++) cells = cells.map(([x,y])=>[2-y,x]);
+      return SV(cells.map(([x,y])=>`<rect class="inkfill" x="${5+x*16}" y="${5+y*16}" width="14" height="14"/>`).join(''));
+    }
+    default: return '';
+  }
+}
+const figBox = spec => `<span class="figbox">${fig(spec)}</span>`;
+
+/** The figure that belongs with the question stem (series / matrix / set). */
+function figStem(f){
+  if(!f) return '';
+  if(f.mode==='series')
+    return `<div class="figrow">${f.seq.map(figBox).join('<span class="arrowsep">→</span>')}<span class="arrowsep">→</span><span class="figbox q">?</span></div>`;
+  if(f.mode==='matrix')
+    return `<div class="figmatrix">${f.cells.map(figBox).join('')}<span class="figbox q">?</span></div>`;
+  if(f.mode==='set')
+    return `<div class="figset">${f.cells.map((c,i)=>`<span class="item">${figBox(c)}<span>${'ABCD'[i]}</span></span>`).join('')}</div>`;
+  return '';
+}
+/** Options are either plain text or figure specs, depending on the type. */
+const isFigOpt = (q,o) => q.cat==='spatial' && q.fig && q.fig.mode!=='set' && /^\{/.test(o);
+const renderOpt = (q,o) => isFigOpt(q,o) ? figBox(o) : o;
+
+/* ---------- bank filtering ---------- */
+const bankState = { cat:'all', type:'all' };
+function bankFiltered(){
+  return BANK.filter(q => (bankState.cat==='all' || q.cat===bankState.cat)
+                       && (bankState.type==='all' || q.type===bankState.type));
+}
+function setCat(c){ bankState.cat = c; bankState.type='all'; go('bank'); }
+function setType(t){ bankState.type = t; go('bank'); }
+
+function bankView(){
+  const byCat = {}; BANK.forEach(q => byCat[q.cat] = (byCat[q.cat]||0)+1);
+  const pool = BANK.filter(q => bankState.cat==='all' || q.cat===bankState.cat);
+  const byType = {}; pool.forEach(q => byType[q.type] = (byType[q.type]||0)+1);
+  const shown = bankFiltered();
+  // Step through the set rather than taking the first 25, so the preview spans
+  // every type instead of showing 25 consecutive number series.
+  const step = Math.max(1, Math.floor(shown.length / 25));
+  const preview = shown.filter((_, i) => i % step === 0).slice(0, 25);
+  return `
+  <h1>Question bank</h1>
+  <p class="lead">${BANKMETA.total} questions across all fourteen CCAT question types, generated ${BANKMETA.generated}. Filter to a type, then drill it against the clock.</p>
+  <div class="card">
+    <h2>Category</h2>
+    <div class="filters">
+      <button class="chip ${bankState.cat==='all'?'on':''}" onclick="setCat('all')">Everything<span class="n">${BANK.length}</span></button>
+      ${Object.keys(CATLABEL).map(c=>`<button class="chip ${bankState.cat===c?'on':''}" onclick="setCat('${c}')">${CATLABEL[c]}<span class="n">${byCat[c]||0}</span></button>`).join('')}
+    </div>
+    <h2>Question type</h2>
+    <div class="filters">
+      <button class="chip ${bankState.type==='all'?'on':''}" onclick="setType('all')">All types<span class="n">${pool.length}</span></button>
+      ${Object.keys(byType).sort((a,b)=>byType[b]-byType[a]).map(t=>`<button class="chip ${bankState.type===t?'on':''}" onclick="setType('${t}')">${TYPELABEL[t]||t}<span class="n">${byType[t]}</span></button>`).join('')}
+    </div>
+    <hr class="rule">
+    <div class="row">
+      <button class="btn" onclick="startBankDrill(20)">Drill 20 from this set</button>
+      <button class="btn ghost" onclick="startBankDrill(50)">Drill 50 from this set</button>
+      <span style="color:var(--ink-soft);align-self:center">${shown.length} question${shown.length===1?'':'s'} selected</span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Preview</h2>
+    <p>First ${preview.length} of ${shown.length}, answers shown. Use the drill buttons above to attempt them timed instead.</p>
+    <div class="banklist">
+      ${preview.map(q=>`<div class="bq">
+        <div class="meta">${CATLABEL[q.cat]} · ${TYPELABEL[q.type]||q.type} · ${q.id}</div>
+        <div>${q.q}</div>${figStem(q.fig)}
+        <div class="ans">Answer: ${'ABCD'[q.a]} — ${isFigOpt(q,q.o[q.a]) ? '<span class="figbox" style="display:inline-flex;width:40px;height:40px;vertical-align:middle">'+fig(q.o[q.a])+'</span>' : q.o[q.a]}</div>
+        <div class="why">${q.e}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ---------- drilling straight from the bank ---------- */
+function startBankDrill(n){
+  const pool = bankFiltered();
+  if(!pool.length){ alert('No questions match that filter.'); return; }
+  const qs = shuffle(pool).slice(0, Math.min(n, pool.length));
+  const label = (bankState.cat==='all' ? 'Whole bank' : CATLABEL[bankState.cat])
+              + (bankState.type==='all' ? '' : ' · ' + (TYPELABEL[bankState.type]||bankState.type));
+  drill = { mod:{ id:'__bank', title:label }, qs, i:0, times:[], correct:0, log:[], fromBank:true };
+  state.view = 'bankdrill'; buildNav();
+  renderDrillQ();
+}
+
+/* ---------- the simulation now draws from the bank ---------- */
+function simPool(){
+  if(BANK.length < 50) return shuffle(MODULES.flatMap(m=>m.questions.map(q=>({...q, cat:m.title})))).slice(0,50);
+  // Mirror the real test's roughly equal thirds.
+  const want = { math:17, verbal:17, spatial:16 };
+  let out = [];
+  for(const c in want){
+    const pool = shuffle(BANK.filter(q=>q.cat===c));
+    out = out.concat(pool.slice(0, want[c]));
+  }
+  if(out.length < 50) out = out.concat(shuffle(BANK).slice(0, 50-out.length));
+  return shuffle(out).slice(0,50);
 }
 
 buildNav(); go('intro');
